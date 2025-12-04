@@ -1,0 +1,21 @@
+name: Generate SSH Key
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate SSH Key
+        run: |
+          ssh-keygen -t ed25519 -C "fastlane-match" -f match_key -N ""
+          echo "PUBLIC KEY:"
+          cat match_key.pub
+          echo "PRIVATE KEY:"
+          cat match_key
+      - name: Upload private key artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: match-private-key
+          path: match_key
