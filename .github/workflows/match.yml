@@ -1,40 +1,36 @@
-name: iOS Certificates Sync
+name: Fastlane Match (Readonly)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ main ]
 
 jobs:
   match:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install Ruby & Bundler
+      # 🟢 Install Ruby & Fastlane
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: true
 
       - name: Install Fastlane
         run: |
-          gem install fastlane -N
+          gem install fastlane
 
-      - name: Prepare API Key (App Store Connect)
-        run: |
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
+      # 🟢 Show files for debugging
+      - name: List project files
+        run: ls -R
 
-      - name: Setup SSH for Certificate Repo
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - name: Run Fastlane Match (App Store)
+      # 🟢 Run Match in readonly mode
+      - name: Run Fastlane Match (Readonly)
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
-          fastlane match appstore --readonly --verbose \
-            --api_key_path api_key.json
+          fastlane match appstore --readonly --verbose --api_key_path api_key.json
+
