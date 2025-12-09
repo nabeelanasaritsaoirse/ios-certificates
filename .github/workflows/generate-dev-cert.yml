@@ -1,4 +1,4 @@
-name: Generate Development Certificate (One-Time)
+name: Generate Dev Certificate (One-Time)
 
 on:
   workflow_dispatch:
@@ -8,20 +8,19 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Install Fastlane
         run: sudo gem install fastlane -N
 
       - name: Create api_key.json
         run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
 
-      - name: Generate Development Certificate
+      - name: Create Development Certificate
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           fastlane match development \
+            --force \
             --api_key_path api_key.json \
-            --git_branch master \
-            --force
+            --git_branch master
