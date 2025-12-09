@@ -13,24 +13,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 🟢 Install Ruby & Fastlane
+      # Install Ruby & Fastlane
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
 
       - name: Install Fastlane
-        run: |
-          gem install fastlane
+        run: gem install fastlane -N
 
-      # 🟢 Show files for debugging
+      # Create API key file for App Store Connect
+      - name: Create api_key.json
+        run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY}}" > api_key.json
+
+      # Debugging – show files
       - name: List project files
-        run: ls -R
+        run: ls -R .
 
-      # 🟢 Run Match in readonly mode
+      # Run Match (App Store only)
       - name: Run Fastlane Match (Readonly)
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
-          fastlane match appstore --readonly --verbose --api_key_path api_key.json
-
+          fastlane match appstore \
+            --readonly \
+            --verbose \
+            --api_key_path api_key.json \
+            --git_branch master
