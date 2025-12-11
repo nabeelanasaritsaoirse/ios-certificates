@@ -1,41 +1,43 @@
-name: Generate App Store Certificate (One-Time)
+name: Fastlane Match (Create Certs Once)
 
 on:
   workflow_dispatch:
 
 jobs:
-  generate-appstore-cert:
+  create:
     runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Fastlane
-        run: sudo gem install fastlane -N
-
-      - name: Create api_key.json
-        run: printf "%s" "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
-
-      - name: DEBUG — Print API key content
+      - name: Setup Git identity
         run: |
-          echo "===== SECRET CONTENT START ====="
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}"
-          echo "===== SECRET CONTENT END ====="
+          git config --global user.email "ci-bot@example.com"
+          git config --global user.name "GitHub Actions Bot"
 
-
-      - name: Setup SSH for Match Repo
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.MATCH_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
 
-      - name: Generate App Store Certificate
+      - name: Install Ruby & Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      - run: gem install fastlane -N
+
+      - name: Run Match in create mode
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           fastlane match appstore \
-            --verbose \
-            --force \
             --api_key_path api_key.json \
-            --git_branch main
+            --git_branch main \
+            --readonly false \
+            --force true \
+            --generate_apple_certs true \
+            --verbose
