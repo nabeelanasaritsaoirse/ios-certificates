@@ -1,7 +1,16 @@
-git_url("https://github.com/nabeelanasaritsaoirse/ios-certificates.git")
+git_url("https://github.com/nabeelanasaarsitaosaire/ios-certificates.git")
+
+type("appstore")        # default type
+app_identifier(["com.saoirse.epi"])
+
+username("samvictormichael@gmail.com")
+
+team_id("BYQUNNQSQH")
 
 storage_mode("git")
-type("appstore")
+branch("main")
 
-api_key_path("./api_key.json")
-app_identifier(["com.saoirse.epi"])
+keychain_name("login.keychain")
+keychain_password(ENV["KEYCHAIN_PASSWORD"])
+
+readonly(false)
