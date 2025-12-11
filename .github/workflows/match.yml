@@ -33,7 +33,7 @@ jobs:
 
       # Create API key file for App Store Connect
       - name: Create api_key.json
-        run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
+        run: printf "%s" "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
 
       # Debugging – show files
       - name: List project files
