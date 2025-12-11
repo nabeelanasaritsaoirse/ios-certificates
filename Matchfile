@@ -1,21 +1,16 @@
-git_url("git@github.com:nabeelanasaritsaoirse/ios-certificates.git")
+# Git repo for certificates
+git_url("https://github.com/nabeelanasaritsaoirse/ios-certificates.git")
 
-# Use the correct parameter name
-git_branch("main")
-
+# Store signing assets in Git
 storage_mode("git")
 
-type("appstore")        # default type when not overridden
+# Default type for match (App Store certificates)
+type("appstore")
 
+# Path to your API key
+api_key_path("./api_key.json")
+
+# App identifiers
 app_identifier([
   "com.saoirse.epi"
 ])
-
-username("samvictormichael@gmail.com")
-team_id("BYQUNNQSQH")
-
-# Optional but important
-keychain_name("login.keychain")
-keychain_password(ENV["KEYCHAIN_PASSWORD"])
-
-readonly(false) # allow creation of new certificates
