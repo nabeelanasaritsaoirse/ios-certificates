@@ -1,4 +1,4 @@
-git_url("git@github.com:nabeelanasaarsitaosaire/ios-certificates.git")
+git_url("git@github.com:nabeelanasaritsaoirse/ios-certificates.git")
 
 # Use the correct parameter name
 git_branch("main")
