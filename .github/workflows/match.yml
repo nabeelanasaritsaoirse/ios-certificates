@@ -18,8 +18,6 @@ jobs:
           git config --global user.email "ci-bot@example.com"
           git config --global user.name "GitHub Actions Bot"
 
-
-      # --- SSH SETUP FOR MATCH REPO ---
       - name: Setup SSH for Match Repo
         run: |
           mkdir -p ~/.ssh
@@ -28,7 +26,6 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf "https://github.com/"
 
-      # Install Ruby & Fastlane
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -37,22 +34,11 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane -N
 
-      # # Create API key file for App Store Connect
-      # - name: Create api_key.json
-      #   run: printf "%s" "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
-
-      # Debugging – show files
-      - name: List project files
-        run: ls -R .
-        
-      - name: Run Fastlane Match (Create or Update Certificates)
+      - name: Run Fastlane Match (READ EXISTING CERTS ONLY)
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           fastlane match appstore \
-            --verbose \
             --api_key_path api_key.json \
-            --git_branch master \
-            --readonly false \
-            --force \
-            --generate_apple_certs true
+            --git_branch main \
+            --readonly true
