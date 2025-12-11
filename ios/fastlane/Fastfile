@@ -1,15 +1,73 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Build and upload to TestFlight"
-  lane :deploy do
+
+  desc "Setup signing certificates"
+  lane :setup_signing do
     match(type: "appstore")
+    match(type: "development")
+  end
+
+  # -------------------------
+  # 🚀 TestFlight Upload Lane
+  # -------------------------
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    setup_signing
 
     build_app(
       scheme: "Runner",
       export_method: "app-store"
     )
 
-    upload_to_testflight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: false,
+      distribute_external: true,
+      groups: ["Beta Testers"],   # Change if needed
+      submit_for_beta_review: true
+    )
   end
+
+  # -------------------------
+  # 📦 Production App Store Release Lane
+  # -------------------------
+  desc "Deploy build to App Store (Production)"
+  lane :deploy do
+    setup_signing
+
+    # Archive build
+    build_app(
+      scheme: "Runner",
+      export_method: "app-store"
+    )
+
+    # Upload to App Store Connect (not TestFlight)
+    upload_to_app_store(
+      skip_screenshots: true,
+      skip_metadata: true,
+      submission_information: {
+        add_id_info_uses_idfa: false
+      }
+    )
+
+    # Optionally auto-submit the app for review
+    submit_for_review(
+      automatic_release: false,   # Change to true to auto-release after approval
+      phased_release: false
+    )
+  end
+
+  # -------------------------
+  # 🏗 Archive-Only Lane
+  # -------------------------
+  desc "Build iOS archive only"
+  lane :build do
+    setup_signing
+
+    build_app(
+      scheme: "Runner",
+      export_method: "app-store"
+    )
+  end
+
 end
