@@ -13,6 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Configure Git Identity
+        run: |
+          git config --global user.email "ci-bot@example.com"
+          git config --global user.name "GitHub Actions Bot"
+
+
       # --- SSH SETUP FOR MATCH REPO ---
       - name: Setup SSH for Match Repo
         run: |
