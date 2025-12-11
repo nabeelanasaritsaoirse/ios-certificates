@@ -46,7 +46,7 @@ jobs:
           fastlane match appstore \
             --verbose \
             --api_key_path api_key.json \
-            --git_branch main \
+            --git_branch master \
             --readonly false \
             --force \
             --generate_apple_certs true
