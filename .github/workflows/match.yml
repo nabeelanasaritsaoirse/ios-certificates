@@ -38,14 +38,15 @@ jobs:
       # Debugging – show files
       - name: List project files
         run: ls -R .
-
-      # Run Match (App Store only)
-      - name: Run Fastlane Match (Readonly)
+        
+      - name: Run Fastlane Match (Create or Update Certificates)
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: |
           fastlane match appstore \
-            --readonly \
             --verbose \
             --api_key_path api_key.json \
-            --git_branch main
+            --git_branch main \
+            --readonly false \
+            --force \
+            --generate_apple_certs true
