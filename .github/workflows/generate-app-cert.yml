@@ -16,6 +16,13 @@ jobs:
       - name: Create api_key.json
         run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" > api_key.json
 
+      - name: DEBUG — Print API key content
+        run: |
+          echo "===== SECRET CONTENT START ====="
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}"
+          echo "===== SECRET CONTENT END ====="
+
+
       - name: Setup SSH for Match Repo
         run: |
           mkdir -p ~/.ssh
