@@ -1,16 +1,21 @@
 git_url("https://github.com/nabeelanasaarsitaosaire/ios-certificates.git")
 
-type("appstore")        # default type
-app_identifier(["com.saoirse.epi"])
-
-username("samvictormichael@gmail.com")
-
-team_id("BYQUNNQSQH")
+# Use the correct parameter name
+git_branch("main")
 
 storage_mode("git")
-branch("main")
 
+type("appstore")        # default type when not overridden
+
+app_identifier([
+  "com.saoirse.epi"
+])
+
+username("samvictormichael@gmail.com")
+team_id("BYQUNNQSQH")
+
+# Optional but important
 keychain_name("login.keychain")
 keychain_password(ENV["KEYCHAIN_PASSWORD"])
 
-readonly(false)
+readonly(false) # allow creation of new certificates
